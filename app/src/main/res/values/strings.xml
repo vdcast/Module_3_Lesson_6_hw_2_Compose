@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Module_3_Lesson_6_hw_2_Compose</string>
+    <string name="smart_house_manager">Smart House Manager</string>
+    <string name="light">Light</string>
+    <string name="kitchen">Kitchen</string>
+    <string name="tasks">Tasks</string>
+    <string name="air_conditioning">Air Conditioning</string>
+    <string name="light_control">Light Control</string>
+    <string name="statistics">Statistics</string>
+    <string name="start_cooking">Start Cooking</string>
+    <string name="add_task">Add Task</string>
+    <string name="current_temperature">Current temperature: %d</string>
+    <string name="temperature_up">Up</string>
+    <string name="temperature_down">Down</string>
 </resources>
