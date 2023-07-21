@@ -45,7 +45,7 @@ import com.example.module_3_lesson_6_hw_2_compose.R
 import com.example.module_3_lesson_6_hw_2_compose.ui.rooms.RoomItemDetails
 import com.example.module_3_lesson_6_hw_2_compose.ui.rooms.RoomItemUiState
 import com.example.module_3_lesson_6_hw_2_compose.ui.rooms.RoomListViewModel
-import com.example.module_3_lesson_6_hw_2_compose.ui.rooms.RoomsEditViewModel
+import com.example.module_3_lesson_6_hw_2_compose.ui.rooms.RoomsAddViewModel
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Green10
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Green20
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Module_3_Lesson_6_hw_2_ComposeTheme
@@ -165,7 +165,7 @@ fun LightScreen(
 
 @Composable
 fun LightControlScreen(
-    viewModelRoomsEdit: RoomsEditViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModelRoomsEdit: RoomsAddViewModel = viewModel(factory = AppViewModelProvider.Factory),
     viewModelRoomList: RoomListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     var isAdding by remember { mutableStateOf(false) }
