@@ -25,13 +25,13 @@ class MainActivity : ComponentActivity() {
 
         var lightOfRoom = LightOfRoom("Office", true)
 
-//        lightOfRoomDao.insert(lightOfRoom)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe(
-//                { Log.d("MYLOG", "success") },
-//                { error -> Log.d("MYLOG", error.message.toString()) }
-//            )
+        lightOfRoomDao.insert(lightOfRoom)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { Log.d("MYLOG", "success") },
+                { error -> Log.d("MYLOG", error.message.toString()) }
+            )
 
         lightOfRoomDao.getAllLightOfRoom()
             .subscribeOn(Schedulers.io())
