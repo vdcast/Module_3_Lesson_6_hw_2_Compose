@@ -1,5 +1,6 @@
 package com.example.module_3_lesson_6_hw_2_compose.ui.rooms
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.module_3_lesson_6_hw_2_compose.data.RoomsRepository
@@ -25,7 +26,13 @@ class RoomsAddViewModel(private val roomsRepository: RoomsRepository) : ViewMode
     }
 
     suspend fun saveRoom() {
-        roomsRepository.insertRoom(roomItemUiState.roomItemDetails.toRoomItem())
+        val response = retrofit.fetchSomeData()
+        if (response.isSuccessful) {
+            roomsRepository.insertRoom(roomItemUiState.roomItemDetails.toRoomItem())
+            Log.d("MYLOG", response.body()?.fact.toString())
+        } else {
+            Log.d("MYLOG", "Response not successful. Code: ${response.code()}, Message: ${response.message()}")
+        }
     }
 }
 
