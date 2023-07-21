@@ -27,10 +27,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.module_3_lesson_6_hw_2_compose.R
+import com.example.module_3_lesson_6_hw_2_compose.ui.rooms.RoomsEditViewModel
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Green10
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Green20
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Module_3_Lesson_6_hw_2_ComposeTheme
@@ -150,7 +152,9 @@ fun LightScreen(
 }
 
 @Composable
-fun LightControlScreen() {
+fun LightControlScreen(
+    viewModel: RoomsEditViewModel = viewModel(factory = AppViewModelProvider.Factory)
+) {
     val (isCheckedOffice, setCheckedOffice) = remember { mutableStateOf(false) }
     val (isCheckedBedroom, setCheckedBedroom) = remember { mutableStateOf(false) }
     val (isCheckedHall, setCheckedHall) = remember { mutableStateOf(false) }
@@ -167,7 +171,10 @@ fun LightControlScreen() {
         SwitchRow(
             text = stringResource(id = R.string.light_office),
             isChecked = isCheckedOffice,
-            onChange = setCheckedOffice
+            onChange = {
+                setCheckedOffice(it)
+                viewModel.updateLightSwitch()
+            }
         )
         SwitchRow(
             text = stringResource(id = R.string.light_bedroom),
@@ -189,6 +196,7 @@ fun LightControlScreen() {
             isChecked = isCheckedBathroom,
             onChange = setCheckedBathroom
         )
+
     }
 }
 
