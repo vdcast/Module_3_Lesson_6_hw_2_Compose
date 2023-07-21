@@ -18,10 +18,15 @@
     <string name="statistics_previous_month">Previous month</string>
     <string name="statistics_current_year">Current year</string>
     <string name="statistics_adjust">Adjust Statistics</string>
-    <string name="statistics_button_save">Save</string>
+    <string name="save">Save</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
     <string name="start_cooking">Start Cooking</string>
     <string name="add_task">Add Task</string>
     <string name="current_temperature">Current temperature: %d</string>
     <string name="temperature_up">Up</string>
     <string name="temperature_down">Down</string>
+    <string name="add_room">Add Room</string>
+    <string name="edit_rooms">Edit Rooms</string>
+    <string name="room_name">Room Name</string>
 </resources>

@@ -21,6 +21,44 @@ class RoomsEditViewModel(private val roomsRepository: RoomsRepository) : ViewMod
     private val retrofit = RetrofitClient.getClient("https://catfact.ninja/")
         .create(API::class.java)
 
+
+    fun updateUiState(roomItemDetails: RoomItemDetails) {
+        roomItemUiState =
+            RoomItemUiState(roomItemDetails = roomItemDetails)
+    }
+
+    suspend fun saveRoom() {
+        roomsRepository.insertRoom(roomItemUiState.roomItemDetails.toRoomItem())
+    }
+
+    fun testAddRoom() {
+        viewModelScope.launch {
+            val response = retrofit.fetchSomeData()
+            if (response.isSuccessful) {
+                Log.d("MYLOG", response.body()?.fact.toString())
+
+                roomsRepository.insertRoom(RoomItem(10, "kek", true))
+
+            } else {
+                Log.d("MYLOG", "Response not successful. Code: ${response.code()}, Message: ${response.message()}")
+            }
+        }
+    }
+    fun testDeleteRoom() {
+        viewModelScope.launch {
+            val response = retrofit.fetchSomeData()
+            if (response.isSuccessful) {
+                Log.d("MYLOG", response.body()?.fact.toString())
+
+                roomsRepository.deleteRoom(RoomItem(10, "kek", true))
+
+            } else {
+                Log.d("MYLOG", "Response not successful. Code: ${response.code()}, Message: ${response.message()}")
+            }
+        }
+    }
+
+
     fun updateLightSwitch() {
         viewModelScope.launch {
             val response = retrofit.fetchSomeData()

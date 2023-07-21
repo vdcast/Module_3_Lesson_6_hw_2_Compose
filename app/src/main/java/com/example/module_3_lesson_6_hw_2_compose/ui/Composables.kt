@@ -1,18 +1,23 @@
 package com.example.module_3_lesson_6_hw_2_compose.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -41,6 +46,30 @@ fun SwitchRow(text: String, isChecked: Boolean, onChange: (Boolean) -> Unit) {
             onCheckedChange = { newValue ->
                 onChange(newValue)
             }
+        )
+    }
+}
+@Composable
+fun SwitchRowEditing(text: String, onDeleteClicked: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(0.8f)
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.padding_medium),
+                vertical = dimensionResource(id = R.dimen.padding_medium),
+            ),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = text
+        )
+        Icon(
+            modifier = Modifier
+                .scale(1.25f)
+                .clickable { onDeleteClicked() },
+            imageVector = Icons.Default.Delete,
+            contentDescription = "delete room"
         )
     }
 }

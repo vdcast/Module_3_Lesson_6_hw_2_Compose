@@ -9,33 +9,47 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.module_3_lesson_6_hw_2_compose.R
+import com.example.module_3_lesson_6_hw_2_compose.ui.rooms.RoomItemDetails
+import com.example.module_3_lesson_6_hw_2_compose.ui.rooms.RoomItemUiState
+import com.example.module_3_lesson_6_hw_2_compose.ui.rooms.RoomListViewModel
 import com.example.module_3_lesson_6_hw_2_compose.ui.rooms.RoomsEditViewModel
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Green10
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Green20
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Module_3_Lesson_6_hw_2_ComposeTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun MyApp() {
@@ -79,8 +93,6 @@ fun MyApp() {
             }
         }
     }
-
-
 
 
 }
@@ -153,51 +165,158 @@ fun LightScreen(
 
 @Composable
 fun LightControlScreen(
-    viewModel: RoomsEditViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModelRoomsEdit: RoomsEditViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModelRoomList: RoomListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    val (isCheckedOffice, setCheckedOffice) = remember { mutableStateOf(false) }
-    val (isCheckedBedroom, setCheckedBedroom) = remember { mutableStateOf(false) }
-    val (isCheckedHall, setCheckedHall) = remember { mutableStateOf(false) }
-    val (isCheckedKitchen, setCheckedKitchen) = remember { mutableStateOf(false) }
-    val (isCheckedBathroom, setCheckedBathroom) = remember { mutableStateOf(false) }
+    var isAdding by remember { mutableStateOf(false) }
+    var isEditing by remember { mutableStateOf(false) }
+    val roomListUiState by viewModelRoomList.roomListUiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = stringResource(id = R.string.light_control))
+        if (!isAdding) {
+            if (!isEditing) {
+                Text(text = stringResource(id = R.string.light_control))
+                LazyColumn() {
+                    itemsIndexed(roomListUiState.roomList) { index, item ->
+                        SwitchRow(
+                            text = item.name,
+                            isChecked = item.isLightOn,
+                            onChange = {
+                                coroutineScope.launch {
+                                    viewModelRoomList.updateRoomIsLightOn(item.id, it)
+                                }
+                            }
+                        )
+                    }
+                }
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f),
+                    onClick = {
+                        isAdding = true
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.add_room))
+                }
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f),
+                    onClick = {
+                        isEditing = true
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.edit_rooms))
+                }
+            } else {
+                Text(text = stringResource(id = R.string.light_control))
+                LazyColumn() {
+                    itemsIndexed(roomListUiState.roomList) { index, item ->
+                        SwitchRowEditing(
+                            text = item.name,
+                            onDeleteClicked = {
+                                coroutineScope.launch {
+                                    viewModelRoomList.deleteRoomItem(item)
+                                }
+                            }
+                        )
+                    }
+                }
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f),
+                    onClick = {
+                        isEditing = false
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.save))
+                }
+            }
+        } else {
+            AddRoom(
+                roomItemUiState = viewModelRoomsEdit.roomItemUiState,
+                onRoomItemValueChange = viewModelRoomsEdit::updateUiState,
+                onSaveClick = {
+                    coroutineScope.launch {
+                        viewModelRoomsEdit.saveRoom()
+                        isAdding = false
+                    }
+                },
+                onCancelClick = { isAdding = false }
+            )
+        }
+    }
+}
 
-        SwitchRow(
-            text = stringResource(id = R.string.light_office),
-            isChecked = isCheckedOffice,
-            onChange = {
-                setCheckedOffice(it)
-                viewModel.updateLightSwitch()
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddRoom(
+    roomItemUiState: RoomItemUiState,
+    onRoomItemValueChange: (RoomItemDetails) -> Unit,
+    onSaveClick: () -> Unit,
+    onCancelClick: () -> Unit
+) {
+    var inputText by remember { mutableStateOf("") }
+    var checked by remember { mutableStateOf(false) }
+    var isInputEmpty by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+
+    OutlinedTextField(
+        modifier = Modifier.fillMaxWidth(0.8f),
+        value = inputText,
+        onValueChange = {
+            inputText = it
+            onRoomItemValueChange(roomItemUiState.roomItemDetails.copy(name = it))
+            isInputEmpty = it.isEmpty()
+        },
+        isError = isInputEmpty,
+        label = { Text(stringResource(id = R.string.room_name)) },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Done
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                focusManager.clearFocus()
+            }
+        ),
+    )
+
+    Row(
+        modifier = Modifier.fillMaxWidth(0.7f),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = stringResource(id = R.string.light))
+        Switch(
+            checked = checked,
+            onCheckedChange = { newValue ->
+                checked = newValue
+                onRoomItemValueChange(roomItemUiState.roomItemDetails.copy(isLightOn = newValue))
             }
         )
-        SwitchRow(
-            text = stringResource(id = R.string.light_bedroom),
-            isChecked = isCheckedBedroom,
-            onChange = setCheckedBedroom
-        )
-        SwitchRow(
-            text = stringResource(id = R.string.light_hall),
-            isChecked = isCheckedHall,
-            onChange = setCheckedHall
-        )
-        SwitchRow(
-            text = stringResource(id = R.string.light_kitchen),
-            isChecked = isCheckedKitchen,
-            onChange = setCheckedKitchen
-        )
-        SwitchRow(
-            text = stringResource(id = R.string.light_bathroom),
-            isChecked = isCheckedBathroom,
-            onChange = setCheckedBathroom
-        )
-
     }
+    Button(
+        modifier = Modifier
+            .fillMaxWidth(0.5f),
+        enabled = inputText.isNotEmpty(),
+        onClick = {
+            if (inputText.isNotEmpty()) {
+                onSaveClick()
+            } else {
+                isInputEmpty = true
+            }
+        }
+    ) { Text(text = stringResource(id = R.string.add)) }
+    Button(
+        modifier = Modifier
+            .fillMaxWidth(0.5f),
+        onClick = onCancelClick
+    ) { Text(text = stringResource(id = R.string.cancel)) }
 }
 
 @Composable
@@ -257,7 +376,7 @@ fun LightStatisticsScreen() {
                 modifier = Modifier.fillMaxWidth(0.5f),
                 onClick = { isEditingState = false }
             ) {
-                Text(text = stringResource(id = R.string.statistics_button_save))
+                Text(text = stringResource(id = R.string.save))
             }
         }
 

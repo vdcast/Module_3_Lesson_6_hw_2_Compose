@@ -8,7 +8,7 @@ class OfflineRoomsRepository(private val roomDao: RoomDao) : RoomsRepository {
     override fun getAllByTurnedStream(isLightOn: Boolean): Flow<List<RoomItem>> =
         roomDao.getAllByTurned(isLightOn)
 
-    override fun getRoomByIdStream(id: Int): Flow<RoomItem?> = roomDao.getRoomById(id)
+    override suspend fun getRoomById(id: Int): RoomItem? = roomDao.getRoomById(id)
 
     override fun getRoomByNameStream(name: String): Flow<RoomItem?> = roomDao.getRoomByName(name)
 

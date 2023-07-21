@@ -26,7 +26,7 @@ interface RoomDao {
     fun getAllByTurned(isLightOn: Boolean): Flow<List<RoomItem>>
 
     @Query("SELECT * from rooms WHERE id =:id")
-    fun getRoomById(id: Int): Flow<RoomItem>
+    suspend fun getRoomById(id: Int): RoomItem?
 
     @Query("SELECT * from rooms WHERE name = :name")
     fun getRoomByName(name: String): Flow<RoomItem>

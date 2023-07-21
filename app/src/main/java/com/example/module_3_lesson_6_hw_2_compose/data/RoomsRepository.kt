@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 interface RoomsRepository {
     fun getAllRoomsStream(): Flow<List<RoomItem>>
     fun getAllByTurnedStream(isLightOn: Boolean): Flow<List<RoomItem>>
-    fun getRoomByIdStream(id: Int): Flow<RoomItem?>
+    suspend fun getRoomById(id: Int): RoomItem?
     fun getRoomByNameStream(name: String): Flow<RoomItem?>
     suspend fun insertRoom(roomItem: RoomItem)
     suspend fun updateRoom(roomItem: RoomItem)
