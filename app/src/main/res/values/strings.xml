@@ -11,6 +11,7 @@
     <string name="light_hall">Hall</string>
     <string name="light_kitchen">Kitchen</string>
     <string name="light_bathroom">Bathroom</string>
+    <string name="rooms_empty">There is no rooms yet. Please, add a room.</string>
     <string name="statistics">Statistics</string>
     <string name="statistics_period">Period</string>
     <string name="statistics_kwh">kW⋅h</string>

@@ -1,10 +1,10 @@
-package com.example.module_3_lesson_6_hw_2_compose.ui.rooms
+package com.example.module_3_lesson_6_hw_2_compose.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.module_3_lesson_6_hw_2_compose.data.RoomItem
-import com.example.module_3_lesson_6_hw_2_compose.data.RoomsRepository
+import com.example.module_3_lesson_6_hw_2_compose.data.rooms.RoomItem
+import com.example.module_3_lesson_6_hw_2_compose.data.rooms.RoomsRepository
 import com.example.module_3_lesson_6_hw_2_compose.data.network.API
 import com.example.module_3_lesson_6_hw_2_compose.data.network.RetrofitClient
 import kotlinx.coroutines.flow.SharingStarted

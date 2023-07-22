@@ -1,14 +1,14 @@
-package com.example.module_3_lesson_6_hw_2_compose.ui.rooms
+package com.example.module_3_lesson_6_hw_2_compose.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.module_3_lesson_6_hw_2_compose.data.RoomsRepository
+import com.example.module_3_lesson_6_hw_2_compose.data.rooms.RoomsRepository
 import com.example.module_3_lesson_6_hw_2_compose.data.network.API
 import com.example.module_3_lesson_6_hw_2_compose.data.network.RetrofitClient
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
-import com.example.module_3_lesson_6_hw_2_compose.data.RoomItem
+import com.example.module_3_lesson_6_hw_2_compose.data.rooms.RoomItem
 
 class RoomsAddViewModel(private val roomsRepository: RoomsRepository) : ViewModel() {
 
@@ -34,6 +34,8 @@ class RoomsAddViewModel(private val roomsRepository: RoomsRepository) : ViewMode
             Log.d("MYLOG", "Response not successful. Code: ${response.code()}, Message: ${response.message()}")
         }
     }
+
+
 }
 
 data class RoomItemUiState(
