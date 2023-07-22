@@ -41,6 +41,9 @@ import com.example.module_3_lesson_6_hw_2_compose.viewmodel.RoomsAddViewModel
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Green10
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Green20
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Module_3_Lesson_6_hw_2_ComposeTheme
+import com.example.module_3_lesson_6_hw_2_compose.viewmodel.AppViewModelProvider
+import com.example.module_3_lesson_6_hw_2_compose.viewmodel.StatisticsEditViewModel
+import com.example.module_3_lesson_6_hw_2_compose.viewmodel.StatisticsListViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -209,7 +212,7 @@ fun LightControlScreen(
                     Text(text = stringResource(id = R.string.edit_rooms))
                 }
             } else {
-                Text(text = stringResource(id = R.string.light_control))
+                Text(text = stringResource(id = R.string.light_delete_room))
                 LazyColumn() {
                     itemsIndexed(roomListUiState.roomList) { index, item ->
                         RowEditing(
@@ -233,7 +236,6 @@ fun LightControlScreen(
                 }
             }
         } else {
-//            viewModelRoomsAdd.resetState()
             AddRoom(
                 roomItemUiState = viewModelRoomsAdd.roomItemUiState,
                 onRoomItemValueChange = viewModelRoomsAdd::updateUiState,
@@ -250,7 +252,14 @@ fun LightControlScreen(
 }
 
 @Composable
-fun LightStatisticsScreen() {
+fun LightStatisticsScreen(
+    viewModelStatisticsList: StatisticsListViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModelStatisticsEdit: StatisticsEditViewModel = viewModel(factory = AppViewModelProvider.Factory)
+) {
+    val statisticsListUiState by viewModelStatisticsList.statisticsListUiState.collectAsState()
+
+    val coroutineScope = rememberCoroutineScope()
+
     var currentMonth by remember { mutableStateOf("") }
     var previousMonth by remember { mutableStateOf("") }
     var currentYear by remember { mutableStateOf("") }
@@ -279,6 +288,13 @@ fun LightStatisticsScreen() {
                 textTitle = stringResource(id = R.string.statistics_current_year),
                 textValue = "2248"
             )
+
+            LazyColumn() {
+                itemsIndexed(statisticsListUiState.statisticsList) { index, item ->
+                    StatisticsRow(textTitle = item.name, textValue = item.value.toString())
+                }
+            }
+
             Button(
                 modifier = Modifier.fillMaxWidth(0.5f),
                 onClick = { isEditingState = true }
@@ -289,7 +305,16 @@ fun LightStatisticsScreen() {
             Text(text = stringResource(id = R.string.statistics_adjust))
             StatisticsOutlinedTextFiled(
                 value = currentMonth,
-                onValueChange = { currentMonth = it },
+                onValueChange = {
+                    currentMonth = it
+                    viewModelStatisticsEdit
+                        .updateUiState(viewModelStatisticsEdit.statisticsItemUiState
+                            .statisticsItemDetails.copy(value = it.toDouble()))
+
+                    coroutineScope.launch {
+                        viewModelStatisticsEdit.saveTest("Current month", it.toDouble())
+                    }
+                },
                 labelId = R.string.statistics_current_month
             )
             StatisticsOutlinedTextFiled(

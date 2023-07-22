@@ -14,6 +14,9 @@ interface StatisticsDao{
     @Query("SELECT * from statistics")
     fun getAllStatistics(): Flow<List<StatisticsItem>>
 
+    @Query("SELECT * from statistics WHERE name =:name")
+    suspend fun getRoomByName(name: String): StatisticsItem?
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(statisticsItem: StatisticsItem)
 

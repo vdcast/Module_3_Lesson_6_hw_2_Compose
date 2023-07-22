@@ -6,6 +6,7 @@
     <string name="tasks">Tasks</string>
     <string name="air_conditioning">Air Conditioning</string>
     <string name="light_control">Light Control</string>
+    <string name="light_delete_room">Delete a Room</string>
     <string name="light_office">Office</string>
     <string name="light_bedroom">Bedroom</string>
     <string name="light_hall">Hall</string>

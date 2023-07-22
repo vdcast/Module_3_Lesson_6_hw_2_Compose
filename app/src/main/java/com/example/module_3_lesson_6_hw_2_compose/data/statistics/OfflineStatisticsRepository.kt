@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 class OfflineStatisticsRepository(private val statisticsDao: StatisticsDao) : StatisticsRepository {
     override fun getAllStatistics(): Flow<List<StatisticsItem>> = statisticsDao.getAllStatistics()
+    override suspend fun getRoomByName(name: String): StatisticsItem? = statisticsDao.getRoomByName(name)
 
     override suspend fun insert(statisticsItem: StatisticsItem) = statisticsDao.insert(statisticsItem)
 

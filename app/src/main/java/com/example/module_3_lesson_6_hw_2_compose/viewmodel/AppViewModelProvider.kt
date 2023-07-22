@@ -1,4 +1,4 @@
-package com.example.module_3_lesson_6_hw_2_compose.ui
+package com.example.module_3_lesson_6_hw_2_compose.viewmodel
 
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -15,6 +15,12 @@ object AppViewModelProvider {
         }
         initializer {
             RoomListViewModel(smartHouseManagerApplication().container.roomsRepository)
+        }
+        initializer {
+            StatisticsListViewModel(smartHouseManagerApplication().container.statisticsRepository)
+        }
+        initializer {
+            StatisticsEditViewModel(smartHouseManagerApplication().container.statisticsRepository)
         }
     }
 }

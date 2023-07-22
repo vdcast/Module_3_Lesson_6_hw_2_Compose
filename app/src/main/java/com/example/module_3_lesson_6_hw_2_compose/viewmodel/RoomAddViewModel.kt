@@ -21,8 +21,7 @@ class RoomsAddViewModel(private val roomsRepository: RoomsRepository) : ViewMode
 
 
     fun updateUiState(roomItemDetails: RoomItemDetails) {
-        roomItemUiState =
-            RoomItemUiState(roomItemDetails = roomItemDetails)
+        roomItemUiState = RoomItemUiState(roomItemDetails = roomItemDetails)
     }
 
     suspend fun saveRoom() {
@@ -38,15 +37,17 @@ class RoomsAddViewModel(private val roomsRepository: RoomsRepository) : ViewMode
 
 }
 
-data class RoomItemUiState(
-    val roomItemDetails: RoomItemDetails = RoomItemDetails()
-)
-
 data class RoomItemDetails(
     val id: Int = 0,
     val name: String = "",
     val isLightOn: Boolean = false
 )
+
+data class RoomItemUiState(
+    val roomItemDetails: RoomItemDetails = RoomItemDetails()
+)
+
+
 
 fun RoomItemDetails.toRoomItem(): RoomItem = RoomItem(
     id = id,

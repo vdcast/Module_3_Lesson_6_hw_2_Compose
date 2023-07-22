@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface StatisticsRepository {
     fun getAllStatistics(): Flow<List<StatisticsItem>>
+    suspend fun getRoomByName(name: String): StatisticsItem?
     suspend fun insert(statisticsItem: StatisticsItem)
     suspend fun update(statisticsItem: StatisticsItem)
     suspend fun delete(statisticsItem: StatisticsItem)
