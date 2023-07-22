@@ -216,7 +216,7 @@ fun LightControlScreen(
                 Text(text = stringResource(id = R.string.light_control))
                 LazyColumn() {
                     itemsIndexed(roomListUiState.roomList) { index, item ->
-                        SwitchRowEditing(
+                        RowEditing(
                             text = item.name,
                             onDeleteClicked = {
                                 coroutineScope.launch {
@@ -250,73 +250,6 @@ fun LightControlScreen(
             )
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AddRoom(
-    roomItemUiState: RoomItemUiState,
-    onRoomItemValueChange: (RoomItemDetails) -> Unit,
-    onSaveClick: () -> Unit,
-    onCancelClick: () -> Unit
-) {
-    var inputText by remember { mutableStateOf("") }
-    var checked by remember { mutableStateOf(false) }
-    var isInputEmpty by remember { mutableStateOf(false) }
-    val focusManager = LocalFocusManager.current
-
-    OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(0.8f),
-        value = inputText,
-        onValueChange = {
-            inputText = it
-            onRoomItemValueChange(roomItemUiState.roomItemDetails.copy(name = it))
-            isInputEmpty = it.isEmpty()
-        },
-        isError = isInputEmpty,
-        label = { Text(stringResource(id = R.string.room_name)) },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Done
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                focusManager.clearFocus()
-            }
-        ),
-    )
-
-    Row(
-        modifier = Modifier.fillMaxWidth(0.7f),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(text = stringResource(id = R.string.light))
-        Switch(
-            checked = checked,
-            onCheckedChange = { newValue ->
-                checked = newValue
-                onRoomItemValueChange(roomItemUiState.roomItemDetails.copy(isLightOn = newValue))
-            }
-        )
-    }
-    Button(
-        modifier = Modifier
-            .fillMaxWidth(0.5f),
-        enabled = inputText.isNotEmpty(),
-        onClick = {
-            if (inputText.isNotEmpty()) {
-                onSaveClick()
-            } else {
-                isInputEmpty = true
-            }
-        }
-    ) { Text(text = stringResource(id = R.string.add)) }
-    Button(
-        modifier = Modifier
-            .fillMaxWidth(0.5f),
-        onClick = onCancelClick
-    ) { Text(text = stringResource(id = R.string.cancel)) }
 }
 
 @Composable

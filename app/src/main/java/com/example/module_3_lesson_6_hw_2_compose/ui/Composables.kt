@@ -9,12 +9,17 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -25,6 +30,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.module_3_lesson_6_hw_2_compose.R
+import com.example.module_3_lesson_6_hw_2_compose.ui.rooms.RoomItemDetails
+import com.example.module_3_lesson_6_hw_2_compose.ui.rooms.RoomItemUiState
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Module_3_Lesson_6_hw_2_ComposeTheme
 
 @Composable
@@ -50,7 +57,7 @@ fun SwitchRow(text: String, isChecked: Boolean, onChange: (Boolean) -> Unit) {
     }
 }
 @Composable
-fun SwitchRowEditing(text: String, onDeleteClicked: () -> Unit) {
+fun RowEditing(text: String, onDeleteClicked: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth(0.8f)
@@ -73,6 +80,74 @@ fun SwitchRowEditing(text: String, onDeleteClicked: () -> Unit) {
         )
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddRoom(
+    roomItemUiState: RoomItemUiState,
+    onRoomItemValueChange: (RoomItemDetails) -> Unit,
+    onSaveClick: () -> Unit,
+    onCancelClick: () -> Unit
+) {
+    var inputText by remember { mutableStateOf("") }
+    var checked by remember { mutableStateOf(false) }
+    var isInputEmpty by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+
+    OutlinedTextField(
+        modifier = Modifier.fillMaxWidth(0.8f),
+        value = inputText,
+        onValueChange = {
+            inputText = it
+            onRoomItemValueChange(roomItemUiState.roomItemDetails.copy(name = it))
+            isInputEmpty = it.isEmpty()
+        },
+        isError = isInputEmpty,
+        label = { Text(stringResource(id = R.string.room_name)) },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Done
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                focusManager.clearFocus()
+            }
+        ),
+    )
+
+    Row(
+        modifier = Modifier.fillMaxWidth(0.7f),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = stringResource(id = R.string.light))
+        Switch(
+            checked = checked,
+            onCheckedChange = { newValue ->
+                checked = newValue
+                onRoomItemValueChange(roomItemUiState.roomItemDetails.copy(isLightOn = newValue))
+            }
+        )
+    }
+    Button(
+        modifier = Modifier
+            .fillMaxWidth(0.5f),
+        enabled = inputText.isNotEmpty(),
+        onClick = {
+            if (inputText.isNotEmpty()) {
+                onSaveClick()
+            } else {
+                isInputEmpty = true
+            }
+        }
+    ) { Text(text = stringResource(id = R.string.add)) }
+    Button(
+        modifier = Modifier
+            .fillMaxWidth(0.5f),
+        onClick = onCancelClick
+    ) { Text(text = stringResource(id = R.string.cancel)) }
+}
+
 @Composable
 fun StatisticsRow(textTitle: String, textValue: String) {
     Row(
