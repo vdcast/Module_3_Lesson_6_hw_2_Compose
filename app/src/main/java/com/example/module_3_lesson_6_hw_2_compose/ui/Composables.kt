@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.module_3_lesson_6_hw_2_compose.R
@@ -106,6 +107,7 @@ fun AddRoom(
         label = { Text(stringResource(id = R.string.room_name)) },
         singleLine = true,
         keyboardOptions = KeyboardOptions(
+            capitalization = KeyboardCapitalization.Sentences,
             imeAction = ImeAction.Done
         ),
         keyboardActions = KeyboardActions(

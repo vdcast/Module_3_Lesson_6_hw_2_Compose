@@ -12,15 +12,21 @@ import com.example.module_3_lesson_6_hw_2_compose.data.rooms.RoomDao
 import com.example.module_3_lesson_6_hw_2_compose.data.rooms.RoomItem
 import com.example.module_3_lesson_6_hw_2_compose.data.statistics.StatisticsDao
 import com.example.module_3_lesson_6_hw_2_compose.data.statistics.StatisticsItem
+import com.example.module_3_lesson_6_hw_2_compose.data.tasks.TaskDao
+import com.example.module_3_lesson_6_hw_2_compose.data.tasks.TaskItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [RoomItem::class, StatisticsItem::class, KitchenItem::class], version = 5, exportSchema = false)
+@Database(
+    entities = [RoomItem::class, StatisticsItem::class, KitchenItem::class, TaskItem::class],
+    version = 6,
+    exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun roomDao(): RoomDao
     abstract fun statisticsDao(): StatisticsDao
     abstract fun kitchenDao(): KitchenDao
+    abstract fun taskDao(): TaskDao
 
     companion object {
         @Volatile
@@ -37,7 +43,6 @@ abstract class AppDatabase : RoomDatabase() {
                 )
             }
         }
-
         // migration_3_4
         private val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(database: SupportSQLiteDatabase) {
@@ -47,6 +52,17 @@ abstract class AppDatabase : RoomDatabase() {
                             "name TEXT NOT NULL, " +
                             "time INTEGER NOT NULL, " +
                             "cookingStatus INTEGER NOT NULL DEFAULT 0)"
+                )
+            }
+        }
+        // migration_5_6
+        private val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    "CREATE TABLE tasks (" +
+                            "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                            "taskTitle TEXT NOT NULL, " +
+                            "taskText TEXT NOT NULL)"
                 )
             }
         }
@@ -76,7 +92,7 @@ abstract class AppDatabase : RoomDatabase() {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, AppDatabase::class.java, "database")
                     .addCallback(callback)
-                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
+                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_5_6)
                     .build()
                     .also { Instance = it }
             }

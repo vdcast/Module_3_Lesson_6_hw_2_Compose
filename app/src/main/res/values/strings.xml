@@ -39,4 +39,9 @@
     <string name="add_room">Add Room</string>
     <string name="edit_rooms">Edit Rooms</string>
     <string name="room_name">Room Name</string>
+    <string name="delete_all_title">Clear all tasks</string>
+    <string name="delete_all_body">This action can\'t be canceled</string>
+    <string name="delete_all_button_yes">Delete All</string>
+    <string name="delete_all_button_no">Cancel</string>
+    <string name="task_list_empty">Add some task.</string>
 </resources>
