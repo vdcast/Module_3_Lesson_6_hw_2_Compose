@@ -43,9 +43,12 @@ import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Green10
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Green20
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Module_3_Lesson_6_hw_2_ComposeTheme
 import com.example.module_3_lesson_6_hw_2_compose.viewmodel.AppViewModelProvider
+import com.example.module_3_lesson_6_hw_2_compose.viewmodel.KitchenViewModel
 import com.example.module_3_lesson_6_hw_2_compose.viewmodel.StatisticsEditViewModel
 import com.example.module_3_lesson_6_hw_2_compose.viewmodel.StatisticsListViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @Composable
 fun MyApp() {
@@ -354,20 +357,56 @@ fun LightStatisticsScreen(
 }
 
 @Composable
-fun KitchenScreen() {
+fun KitchenScreen(
+    viewModelKitchen: KitchenViewModel = viewModel(factory = AppViewModelProvider.Factory)
+) {
+    val kitchenUiState by viewModelKitchen.kitchenListUiState.collectAsState()
+
+    val coroutineScope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(text = stringResource(id = R.string.kitchen))
-        Text(text = "Cooking started?")
+        Text(text = stringResource(id = R.string.cooking_status))
+
+        kitchenUiState.kitchenList.firstOrNull()?.let { item ->
+            val currentTime = System.currentTimeMillis()
+            val startedTime = SimpleDateFormat("HH:mm:ss").format(item.startTime)
+            val finishedTime = SimpleDateFormat("HH:mm:ss").format(item.finishTime)
+            Text(
+                text = if (item.cookingStatus) stringResource(id = R.string.cooking_status_started)
+                else stringResource(id = R.string.cooking_status_finished, finishedTime)
+            )
+            if (item.cookingStatus) {
+                Text(text = stringResource(id = R.string.cooking_started, startedTime))
+                Text(text = stringResource(id = R.string.cooking_finished, finishedTime))
+                if (currentTime > item.finishTime) {
+                    coroutineScope.launch {
+                        viewModelKitchen.stopCooking()
+                    }
+                }
+            }
+        }
+
         Button(
             modifier = Modifier.fillMaxWidth(0.5f),
-            onClick = { /*TODO*/ }
-        ) {
-            Text(text = stringResource(id = R.string.start_cooking))
-        }
+            onClick = {
+                coroutineScope.launch {
+                    viewModelKitchen.startCooking()
+                }
+            }
+        ) { Text(text = stringResource(id = R.string.start_cooking)) }
+        Button(
+            modifier = Modifier.fillMaxWidth(0.5f),
+            onClick = {
+                coroutineScope.launch {
+                    viewModelKitchen.stopCookingByButton()
+                }
+            }
+        ) { Text(text = stringResource(id = R.string.stop_cooking)) }
     }
 }
 

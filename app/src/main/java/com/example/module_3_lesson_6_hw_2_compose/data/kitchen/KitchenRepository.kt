@@ -6,5 +6,6 @@ interface KitchenRepository {
     suspend fun insert(kitchenItem: KitchenItem)
     suspend fun update(kitchenItem: KitchenItem)
     suspend fun delete(kitchenItem: KitchenItem)
-    fun getKitchenByNameStream(name: String): Flow<KitchenItem>
+    suspend fun getKitchenByName(name: String): KitchenItem
+    fun getAllKitchens(): Flow<List<KitchenItem>>
 }

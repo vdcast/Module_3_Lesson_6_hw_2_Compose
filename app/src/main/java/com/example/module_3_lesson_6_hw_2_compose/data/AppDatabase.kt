@@ -16,7 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [RoomItem::class, StatisticsItem::class, KitchenItem::class], version = 4, exportSchema = false)
+@Database(entities = [RoomItem::class, StatisticsItem::class, KitchenItem::class], version = 5, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun roomDao(): RoomDao
     abstract fun statisticsDao(): StatisticsDao
@@ -58,7 +58,7 @@ abstract class AppDatabase : RoomDatabase() {
             StatisticsItem(3, "Current year", 0.0)
         )
         //pre-filled table for Kitchen
-        private val PREFILLED_KITCHEN = KitchenItem(1, "Kitchen", 0, false)
+        private val PREFILLED_KITCHEN = KitchenItem(1, "Kitchen", 0, 0, false)
 
         private val callback = object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {

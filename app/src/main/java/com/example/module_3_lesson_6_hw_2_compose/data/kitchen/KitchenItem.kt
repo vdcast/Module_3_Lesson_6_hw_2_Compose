@@ -8,6 +8,7 @@ data class KitchenItem(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String,
-    val time: Long,
+    val startTime: Long,
+    val finishTime: Long,
     val cookingStatus: Boolean
 )

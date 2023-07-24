@@ -9,6 +9,9 @@ class OfflineKitchenRepository(private val kitchenDao: KitchenDao) : KitchenRepo
 
     override suspend fun delete(kitchenItem: KitchenItem) = kitchenDao.delete(kitchenItem)
 
-    override fun getKitchenByNameStream(name: String): Flow<KitchenItem> =
+    override suspend fun getKitchenByName(name: String): KitchenItem =
         kitchenDao.getKitchenByName(name)
+
+    override fun getAllKitchens(): Flow<List<KitchenItem>> = kitchenDao.getAllKitchens()
+
 }

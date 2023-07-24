@@ -22,6 +22,9 @@ object AppViewModelProvider {
         initializer {
             StatisticsEditViewModel(smartHouseManagerApplication().container.statisticsRepository)
         }
+        initializer {
+            KitchenViewModel(smartHouseManagerApplication().container.kitchenRepository)
+        }
     }
 }
 
