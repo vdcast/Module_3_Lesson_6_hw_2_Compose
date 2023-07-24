@@ -34,6 +34,7 @@
     <string name="cooking_started">Cooking started at: %s</string>
     <string name="cooking_finished">Will be finished at: %s</string>
     <string name="current_temperature">Current temperature: %d</string>
+    <string name="step_temperature">Step: %d</string>
     <string name="temperature_up">Up</string>
     <string name="temperature_down">Down</string>
     <string name="add_room">Add Room</string>

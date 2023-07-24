@@ -26,6 +26,9 @@ object AppViewModelProvider {
         initializer {
             TaskViewModel(smartHouseManagerApplication().container.taskRepository)
         }
+        initializer {
+            AirConditioningViewModel(smartHouseManagerApplication().container.airConditioningRepository)
+        }
     }
 }
 

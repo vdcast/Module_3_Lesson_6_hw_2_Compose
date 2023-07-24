@@ -63,6 +63,7 @@ import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Green10
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Green20
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Green30
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Module_3_Lesson_6_hw_2_ComposeTheme
+import com.example.module_3_lesson_6_hw_2_compose.viewmodel.AirConditioningViewModel
 import com.example.module_3_lesson_6_hw_2_compose.viewmodel.AppViewModelProvider
 import com.example.module_3_lesson_6_hw_2_compose.viewmodel.KitchenViewModel
 import com.example.module_3_lesson_6_hw_2_compose.viewmodel.StatisticsEditViewModel
@@ -649,23 +650,46 @@ fun TasksScreen(
 }
 
 @Composable
-fun AirConditioningScreen() {
+fun AirConditioningScreen(
+    viewModelAc: AirConditioningViewModel = viewModel(factory = AppViewModelProvider.Factory)
+) {
+    val acListUiState by viewModelAc.acListUiState.collectAsState()
+    var currentTemperature by remember { mutableStateOf(0) }
+    var stepTemperature by remember { mutableStateOf(0) }
+    var acName by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
+
+    acListUiState.acList.firstOrNull()?.let { item ->
+        currentTemperature = item.currentTemperature
+        stepTemperature = item.stepTemperature
+        acName = item.name
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(text = stringResource(id = R.string.air_conditioning))
-        Text(text = stringResource(id = R.string.current_temperature, 28))
+        Text(text = stringResource(id = R.string.current_temperature, currentTemperature))
+        Text(text = stringResource(id = R.string.step_temperature, stepTemperature))
         Button(
             modifier = Modifier.fillMaxWidth(0.5f),
-            onClick = { /*TODO*/ }
+            onClick = {
+                coroutineScope.launch {
+                    viewModelAc.temperatureUp(acName)
+                }
+            }
         ) {
             Text(text = stringResource(id = R.string.temperature_up))
         }
         Button(
             modifier = Modifier.fillMaxWidth(0.5f),
-            onClick = { /*TODO*/ }
+            onClick = {
+                coroutineScope.launch {
+                    viewModelAc.temperatureDown(acName)
+                }
+            }
         ) {
             Text(text = stringResource(id = R.string.temperature_down))
         }
