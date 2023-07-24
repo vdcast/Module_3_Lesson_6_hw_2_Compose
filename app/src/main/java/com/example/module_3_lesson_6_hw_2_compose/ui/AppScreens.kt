@@ -19,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -265,6 +266,12 @@ fun LightStatisticsScreen(
     var currentYear by remember { mutableStateOf("") }
     var isEditingState by remember { mutableStateOf(false) }
 
+    LaunchedEffect(viewModelStatisticsEdit) {
+        currentMonth = viewModelStatisticsEdit.getCurrentMonthValue()
+        previousMonth = viewModelStatisticsEdit.getPreviousMonthValue()
+        currentYear = viewModelStatisticsEdit.getCurrentYearValue()
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -272,23 +279,6 @@ fun LightStatisticsScreen(
     ) {
         if (!isEditingState) {
             Text(text = stringResource(id = R.string.statistics))
-            StatisticsRow(
-                textTitle = stringResource(id = R.string.statistics_period),
-                textValue = stringResource(id = R.string.statistics_kwh)
-            )
-            StatisticsRow(
-                textTitle = stringResource(id = R.string.statistics_current_month),
-                textValue = "114"
-            )
-            StatisticsRow(
-                textTitle = stringResource(id = R.string.statistics_previous_month),
-                textValue = "203"
-            )
-            StatisticsRow(
-                textTitle = stringResource(id = R.string.statistics_current_year),
-                textValue = "2248"
-            )
-
             LazyColumn() {
                 itemsIndexed(statisticsListUiState.statisticsList) { index, item ->
                     StatisticsRow(textTitle = item.name, textValue = item.value.toString())
@@ -307,24 +297,48 @@ fun LightStatisticsScreen(
                 value = currentMonth,
                 onValueChange = {
                     currentMonth = it
-                    viewModelStatisticsEdit
-                        .updateUiState(viewModelStatisticsEdit.statisticsItemUiState
-                            .statisticsItemDetails.copy(value = it.toDouble()))
-
+                    viewModelStatisticsEdit.updateUiState(
+                        viewModelStatisticsEdit.statisticsItemUiState.statisticsItemDetails
+                            .copy(value = if (it.isEmpty()) 0.0 else currentMonth.toDouble())
+                    )
                     coroutineScope.launch {
-                        viewModelStatisticsEdit.saveTest("Current month", it.toDouble())
+                        viewModelStatisticsEdit.saveTest(
+                            "Current month", if (it.isEmpty()) 0.0 else currentMonth.toDouble()
+                        )
                     }
                 },
                 labelId = R.string.statistics_current_month
             )
             StatisticsOutlinedTextFiled(
                 value = previousMonth,
-                onValueChange = { previousMonth = it },
+                onValueChange = {
+                    previousMonth = it
+                    viewModelStatisticsEdit.updateUiState(
+                        viewModelStatisticsEdit.statisticsItemUiState.statisticsItemDetails
+                            .copy(value = if (it.isEmpty()) 0.0 else previousMonth.toDouble())
+                    )
+                    coroutineScope.launch {
+                        viewModelStatisticsEdit.saveTest(
+                            "Previous month", if (it.isEmpty()) 0.0 else previousMonth.toDouble()
+                        )
+                    }
+                },
                 labelId = R.string.statistics_previous_month
             )
             StatisticsOutlinedTextFiled(
                 value = currentYear,
-                onValueChange = { currentYear = it },
+                onValueChange = {
+                    currentYear = it
+                    viewModelStatisticsEdit.updateUiState(
+                        viewModelStatisticsEdit.statisticsItemUiState.statisticsItemDetails
+                            .copy(value = if (it.isEmpty()) 0.0 else currentYear.toDouble())
+                    )
+                    coroutineScope.launch {
+                        viewModelStatisticsEdit.saveTest(
+                            "Current year", if (it.isEmpty()) 0.0 else currentYear.toDouble()
+                        )
+                    }
+                },
                 labelId = R.string.statistics_current_year
             )
             Button(

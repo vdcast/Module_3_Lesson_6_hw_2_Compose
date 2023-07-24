@@ -22,6 +22,16 @@ class StatisticsEditViewModel(private val statisticsRepository: StatisticsReposi
             statisticsRepository.update(updatedStatistic)
         }
     }
+
+    suspend fun getCurrentMonthValue(): String {
+        return statisticsRepository.getRoomByName("Current month")?.value.toString() ?: ""
+    }
+    suspend fun getPreviousMonthValue(): String {
+        return statisticsRepository.getRoomByName("Previous month")?.value.toString() ?: ""
+    }
+    suspend fun getCurrentYearValue(): String {
+        return statisticsRepository.getRoomByName("Current year")?.value.toString() ?: ""
+    }
 }
 
 data class StatisticsItemDetails(

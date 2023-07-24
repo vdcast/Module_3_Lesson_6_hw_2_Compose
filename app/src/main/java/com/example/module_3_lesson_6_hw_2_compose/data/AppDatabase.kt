@@ -6,6 +6,8 @@ import androidx.room.RoomDatabase
 import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.module_3_lesson_6_hw_2_compose.data.kitchen.KitchenDao
+import com.example.module_3_lesson_6_hw_2_compose.data.kitchen.KitchenItem
 import com.example.module_3_lesson_6_hw_2_compose.data.rooms.RoomDao
 import com.example.module_3_lesson_6_hw_2_compose.data.rooms.RoomItem
 import com.example.module_3_lesson_6_hw_2_compose.data.statistics.StatisticsDao
@@ -14,16 +16,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [RoomItem::class, StatisticsItem::class], version = 3, exportSchema = false)
+@Database(entities = [RoomItem::class, StatisticsItem::class, KitchenItem::class], version = 4, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun roomDao(): RoomDao
     abstract fun statisticsDao(): StatisticsDao
+    abstract fun kitchenDao(): KitchenDao
 
     companion object {
         @Volatile
         private var Instance: AppDatabase? = null
 
-        // migration
+        // migration_2_3
         private val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL(
@@ -35,12 +38,28 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        // pre-filled table
+        // migration_3_4
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    "CREATE TABLE kitchen (" +
+                            "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                            "name TEXT NOT NULL, " +
+                            "time INTEGER NOT NULL, " +
+                            "cookingStatus INTEGER NOT NULL DEFAULT 0)"
+                )
+            }
+        }
+
+        // pre-filled table for Statistics
         private val PREFILLED_DATA = listOf(
             StatisticsItem(1, "Current month", 0.0),
             StatisticsItem(2, "Previous month", 0.0),
             StatisticsItem(3, "Current year", 0.0)
         )
+        //pre-filled table for Kitchen
+        private val PREFILLED_KITCHEN = KitchenItem(1, "Kitchen", 0, false)
+
         private val callback = object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
@@ -48,6 +67,7 @@ abstract class AppDatabase : RoomDatabase() {
                     PREFILLED_DATA.forEach {
                         Instance?.statisticsDao()?.insert(it)
                     }
+                    Instance?.kitchenDao()?.insert(PREFILLED_KITCHEN)
                 }
             }
         }
@@ -56,7 +76,7 @@ abstract class AppDatabase : RoomDatabase() {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, AppDatabase::class.java, "database")
                     .addCallback(callback)
-                    .addMigrations(MIGRATION_2_3)
+                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
                     .build()
                     .also { Instance = it }
             }
