@@ -11,12 +11,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,9 +37,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -48,7 +60,6 @@ import com.example.module_3_lesson_6_hw_2_compose.viewmodel.StatisticsEditViewMo
 import com.example.module_3_lesson_6_hw_2_compose.viewmodel.StatisticsListViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.Date
 
 @Composable
 fun MyApp() {
@@ -361,7 +372,6 @@ fun KitchenScreen(
     viewModelKitchen: KitchenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val kitchenUiState by viewModelKitchen.kitchenListUiState.collectAsState()
-
     val coroutineScope = rememberCoroutineScope()
 
     Column(
@@ -413,52 +423,120 @@ fun KitchenScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TasksScreen() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = stringResource(id = R.string.tasks))
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    vertical = dimensionResource(id = R.dimen.padding_xsmall),
-                    horizontal = dimensionResource(id = R.dimen.padding_small)
-                )
-                .height(dimensionResource(id = R.dimen.padding_xxlarge)),
-            shape = RoundedCornerShape(dimensionResource(id = R.dimen.padding_medium)),
-            elevation = CardDefaults.cardElevation(
-                dimensionResource(id = R.dimen.padding_xsmall)
-            ),
-            colors = CardDefaults.cardColors(Green10),
-            onClick = { }
-        ) {
-            Row(
+    Box(modifier = Modifier.fillMaxSize()) {
+        var isAdding by remember{ mutableStateOf(false) }
+
+        if (!isAdding) {
+            Column(
                 modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = "some task",
-                    color = Color.White,
+                Text(text = stringResource(id = R.string.tasks))
+                Card(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(start = dimensionResource(id = R.dimen.padding_medium))
+                        .fillMaxWidth()
+                        .padding(
+                            vertical = dimensionResource(id = R.dimen.padding_xsmall),
+                            horizontal = dimensionResource(id = R.dimen.padding_small)
+                        )
+                        .height(dimensionResource(id = R.dimen.padding_xxlarge)),
+                    shape = RoundedCornerShape(dimensionResource(id = R.dimen.padding_medium)),
+                    elevation = CardDefaults.cardElevation(
+                        dimensionResource(id = R.dimen.padding_xsmall)
+                    ),
+                    colors = CardDefaults.cardColors(Green10),
+                    onClick = { }
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "some task",
+                            color = Color.White,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(start = dimensionResource(id = R.dimen.padding_medium))
+                        )
+                        Text(
+                            text = "some task",
+                            color = Color.White,
+                            modifier = Modifier
+                                .weight(0.5f)
+                        )
+                    }
+                }
+            }
+            FloatingActionButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(dimensionResource(id = R.dimen.padding_medium)),
+                containerColor = Green10,
+                contentColor = Color.White,
+                shape = CircleShape,
+                onClick = { isAdding = true }
+            ) { Icon(imageVector = Icons.Default.Add, contentDescription = "add task") }
+        } else {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                var taskTitle by remember { mutableStateOf("") }
+                var taskText by remember { mutableStateOf("") }
+                var isTitleEmpty by remember { mutableStateOf(false) }
+                var isTextEmpty by remember { mutableStateOf(false) }
+
+                val focusManager = LocalFocusManager.current
+
+                Text(text = stringResource(id = R.string.add_task))
+                OutlinedTextField(
+                    value = taskTitle,
+                    onValueChange = {
+                        taskTitle = it
+
+                        isTitleEmpty = it.isEmpty()
+                    },
+                    isError = isTitleEmpty,
+                    label = { Text(stringResource(id = R.string.title)) },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = { focusManager.clearFocus() }
+                    )
                 )
-                Text(
-                    text = "some task",
-                    color = Color.White,
-                    modifier = Modifier
-                        .weight(0.5f)
+                OutlinedTextField(
+                    value = taskText,
+                    onValueChange = {
+                        taskText = it
+
+                        isTextEmpty = it.isEmpty()
+                    },
+                    isError = isTextEmpty,
+                    label = { Text(stringResource(id = R.string.text)) },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = { focusManager.clearFocus() }
+                    )
                 )
+                Button(
+                    modifier = Modifier.fillMaxWidth(0.5f),
+                    enabled = (taskTitle.isNotEmpty() && taskText.isNotEmpty()),
+                    onClick = { isAdding = false }
+                ) { Text(text = stringResource(id = R.string.save)) }
+                Button(
+                    modifier = Modifier.fillMaxWidth(0.5f),
+                    onClick = { isAdding = false }
+                ) { Text(text = stringResource(id = R.string.cancel)) }
             }
         }
-        Button(
-            modifier = Modifier.fillMaxWidth(0.5f),
-            onClick = { /*TODO*/ }
-        ) {
-            Text(text = stringResource(id = R.string.add_task))
-        }
+
     }
 }
 

@@ -4,6 +4,9 @@
     <string name="light">Light</string>
     <string name="kitchen">Kitchen</string>
     <string name="tasks">Tasks</string>
+    <string name="add_task">Add Task</string>
+    <string name="title">Title</string>
+    <string name="text">Text</string>
     <string name="air_conditioning">Air Conditioning</string>
     <string name="light_control">Light Control</string>
     <string name="light_delete_room">Delete a Room</string>
@@ -30,7 +33,6 @@
     <string name="cooking_status_finished">Finished at: %s</string>
     <string name="cooking_started">Cooking started at: %s</string>
     <string name="cooking_finished">Will be finished at: %s</string>
-    <string name="add_task">Add Task</string>
     <string name="current_temperature">Current temperature: %d</string>
     <string name="temperature_up">Up</string>
     <string name="temperature_down">Down</string>

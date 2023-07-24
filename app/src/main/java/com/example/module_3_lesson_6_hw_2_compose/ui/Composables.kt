@@ -112,7 +112,7 @@ fun AddRoom(
             onDone = {
                 focusManager.clearFocus()
             }
-        ),
+        )
     )
 
     Row(
@@ -130,16 +130,9 @@ fun AddRoom(
         )
     }
     Button(
-        modifier = Modifier
-            .fillMaxWidth(0.5f),
+        modifier = Modifier.fillMaxWidth(0.5f),
         enabled = inputText.isNotEmpty(),
-        onClick = {
-            if (inputText.isNotEmpty()) {
-                onSaveClick()
-            } else {
-                isInputEmpty = true
-            }
-        }
+        onClick = { onSaveClick() }
     ) { Text(text = stringResource(id = R.string.add)) }
     Button(
         modifier = Modifier
