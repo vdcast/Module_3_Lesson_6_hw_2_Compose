@@ -10,5 +10,6 @@ data class KitchenItem(
     val name: String,
     val startTime: Long,
     val finishTime: Long,
-    val cookingStatus: Boolean
+    val cookingStatus: Boolean,
+    val cookingTime: Long
 )

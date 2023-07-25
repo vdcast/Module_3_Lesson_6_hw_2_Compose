@@ -90,7 +90,7 @@ abstract class AppDatabase : RoomDatabase() {
             StatisticsItem(3, "Current year", 0.0)
         )
         //pre-filled table for Kitchen
-        private val PREFILLED_KITCHEN = KitchenItem(1, "Kitchen", 0, 0, false)
+        private val PREFILLED_KITCHEN = KitchenItem(1, "Kitchen", 0, 0, false, 10_000)
         private val PREFILLED_AC = AirConditioningItem(1, "Office", 0, 1)
 
         private val callback = object : RoomDatabase.Callback() {

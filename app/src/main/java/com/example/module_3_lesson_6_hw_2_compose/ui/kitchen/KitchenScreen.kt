@@ -39,8 +39,11 @@ fun KitchenScreen(
             val startedTime = SimpleDateFormat("HH:mm:ss").format(item.startTime)
             val finishedTime = SimpleDateFormat("HH:mm:ss").format(item.finishTime)
             Text(
-                text = if (item.cookingStatus) stringResource(id = R.string.cooking_status_started)
-                else stringResource(id = R.string.cooking_status_finished, finishedTime)
+                text = when {
+                    item.cookingStatus -> stringResource(id = R.string.cooking_status_started)
+                    item.finishTime > 0L -> stringResource(id = R.string.cooking_status_finished, finishedTime)
+                    else -> stringResource(id = R.string.cooking_status_nothing)
+                }
             )
             if (item.cookingStatus) {
                 Text(text = stringResource(id = R.string.cooking_started, startedTime))

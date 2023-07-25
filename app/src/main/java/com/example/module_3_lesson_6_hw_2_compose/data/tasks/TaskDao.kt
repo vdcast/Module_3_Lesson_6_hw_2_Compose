@@ -24,4 +24,7 @@ interface TaskDao {
 
     @Query("DELETE from tasks")
     suspend fun deleteAll()
+
+    @Query("SELECT * from tasks")
+    fun getAllTasks(): List<TaskItem>
 }

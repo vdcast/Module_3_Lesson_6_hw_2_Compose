@@ -44,6 +44,10 @@ class TaskViewModel(private val taskRepository: TaskRepository) : ViewModel() {
         taskRepository.deleteAll()
     }
 
+    fun checkNumberOfTasks() {
+        val list = taskRepository.getAllTasks()
+//        if (list.size)
+    }
 }
 
 data class TaskListUiState(

@@ -21,11 +21,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.module_3_lesson_6_hw_2_compose.R
 import com.example.module_3_lesson_6_hw_2_compose.ui.AppViewModelProvider
 import com.example.module_3_lesson_6_hw_2_compose.ui.air_conditioning.AirConditioningViewModel
+import com.example.module_3_lesson_6_hw_2_compose.ui.kitchen.KitchenViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun AdvancedSettingsScreen(
-    viewModelAc: AirConditioningViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModelAc: AirConditioningViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModelKitchen: KitchenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val acListUiState by viewModelAc.acListUiState.collectAsState()
     var stepTemperature by remember { mutableStateOf(0) }
@@ -37,16 +39,44 @@ fun AdvancedSettingsScreen(
         acName = item.name
     }
 
+    val kitchenListUiState by viewModelKitchen.kitchenListUiState.collectAsState()
+    var cookingTime by remember { mutableStateOf(0L) }
+    var kitchenName by remember { mutableStateOf("") }
+
+    kitchenListUiState.kitchenList.firstOrNull()?.let { item ->
+        cookingTime = item.cookingTime / 1000
+        kitchenName = item.name
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(text = stringResource(id = R.string.advanced_settings))
-        Button(
-            modifier = Modifier.fillMaxWidth(0.5f),
-            onClick = {  }
-        ) { Text(text = stringResource(id = R.string.change_cooking_time)) }
+
+        Text(text = stringResource(id = R.string.change_cooking_time))
+        Row(
+            modifier = Modifier.fillMaxWidth(0.8f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        viewModelKitchen.cookingTimeDown(kitchenName)
+                    }
+                }
+            ) { Text(text = stringResource(id = R.string.minus_ten)) }
+            Text(text = stringResource(id = R.string.cooking_time, cookingTime))
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        viewModelKitchen.cookingTimeUp(kitchenName)
+                    }
+                }
+            ) { Text(text = stringResource(id = R.string.plus_ten)) }
+        }
 
         Text(text = stringResource(id = R.string.change_ac_step))
         Row(
@@ -60,7 +90,7 @@ fun AdvancedSettingsScreen(
                         viewModelAc.changeTemperatureStepDown(acName)
                     }
                 }
-            ) { Text(text = stringResource(id = R.string.minus)) }
+            ) { Text(text = stringResource(id = R.string.minus_one)) }
             Text(text = stringResource(id = R.string.degrees_celsius, stepTemperature))
             Button(
                 onClick = {
@@ -68,8 +98,7 @@ fun AdvancedSettingsScreen(
                         viewModelAc.changeTemperatureStepUp(acName)
                     }
                 }
-            ) { Text(text = stringResource(id = R.string.plus)) }
-
+            ) { Text(text = stringResource(id = R.string.plus_one)) }
         }
     }
 }
