@@ -1,4 +1,4 @@
-package com.example.module_3_lesson_6_hw_2_compose.ui.light_rooms_and_statistics
+package com.example.module_3_lesson_6_hw_2_compose.ui.light.statistics
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

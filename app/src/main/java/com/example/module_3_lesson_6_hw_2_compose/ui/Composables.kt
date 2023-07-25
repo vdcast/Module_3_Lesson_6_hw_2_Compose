@@ -31,8 +31,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.module_3_lesson_6_hw_2_compose.R
-import com.example.module_3_lesson_6_hw_2_compose.ui.light_rooms_and_statistics.RoomItemDetails
-import com.example.module_3_lesson_6_hw_2_compose.ui.light_rooms_and_statistics.RoomItemUiState
+import com.example.module_3_lesson_6_hw_2_compose.ui.light.light_control.RoomItemDetails
+import com.example.module_3_lesson_6_hw_2_compose.ui.light.light_control.RoomItemUiState
 import com.example.module_3_lesson_6_hw_2_compose.ui.theme.Module_3_Lesson_6_hw_2_ComposeTheme
 
 @Composable

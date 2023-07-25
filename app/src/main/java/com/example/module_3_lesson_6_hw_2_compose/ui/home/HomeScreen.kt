@@ -17,7 +17,8 @@ fun HomeScreen(
     onLightClicked: () -> Unit,
     onKitchenClicked: () -> Unit,
     onTasksClicked: () -> Unit,
-    onAirConditionClicked: () -> Unit
+    onAirConditionClicked: () -> Unit,
+    onSettingsClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -41,5 +42,9 @@ fun HomeScreen(
             modifier = Modifier.fillMaxWidth(0.5f),
             onClick = onAirConditionClicked
         ) { Text(text = stringResource(id = R.string.air_conditioning)) }
+        Button(
+            modifier = Modifier.fillMaxWidth(0.5f),
+            onClick = onSettingsClicked
+        ) { Text(text = stringResource(id = R.string.settings)) }
     }
 }
