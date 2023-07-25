@@ -12,6 +12,8 @@ import com.example.module_3_lesson_6_hw_2_compose.data.kitchen.KitchenDao
 import com.example.module_3_lesson_6_hw_2_compose.data.kitchen.KitchenItem
 import com.example.module_3_lesson_6_hw_2_compose.data.rooms.RoomDao
 import com.example.module_3_lesson_6_hw_2_compose.data.rooms.RoomItem
+import com.example.module_3_lesson_6_hw_2_compose.data.settings.SettingsDao
+import com.example.module_3_lesson_6_hw_2_compose.data.settings.SettingsItem
 import com.example.module_3_lesson_6_hw_2_compose.data.statistics.StatisticsDao
 import com.example.module_3_lesson_6_hw_2_compose.data.statistics.StatisticsItem
 import com.example.module_3_lesson_6_hw_2_compose.data.tasks.TaskDao
@@ -22,8 +24,8 @@ import kotlinx.coroutines.launch
 
 @Database(
     entities = [RoomItem::class, StatisticsItem::class, KitchenItem::class, TaskItem::class,
-        AirConditioningItem::class],
-    version = 7,
+        AirConditioningItem::class, SettingsItem::class],
+    version = 8,
     exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun roomDao(): RoomDao
@@ -31,6 +33,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun kitchenDao(): KitchenDao
     abstract fun taskDao(): TaskDao
     abstract fun acDao(): AirConditioningDao
+    abstract fun settingsDao(): SettingsDao
 
     companion object {
         @Volatile
@@ -82,6 +85,17 @@ abstract class AppDatabase : RoomDatabase() {
                 )
             }
         }
+        // migration_6_7
+        private val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    "CREATE TABLE air_conditioning (" +
+                            "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                            "name TEXT NOT NULL, " +
+                            "value INTEGER NOT NULL)"
+                )
+            }
+        }
 
         // pre-filled table for Statistics
         private val PREFILLED_DATA = listOf(
@@ -92,6 +106,7 @@ abstract class AppDatabase : RoomDatabase() {
         //pre-filled table for Kitchen
         private val PREFILLED_KITCHEN = KitchenItem(1, "Kitchen", 0, 0, false, 10_000)
         private val PREFILLED_AC = AirConditioningItem(1, "Office", 0, 1)
+        private val PREFILLED_SETTINGS = SettingsItem(1, "TasksNumber", 10)
 
         private val callback = object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
@@ -102,6 +117,7 @@ abstract class AppDatabase : RoomDatabase() {
                     }
                     Instance?.kitchenDao()?.insert(PREFILLED_KITCHEN)
                     Instance?.acDao()?.insert(PREFILLED_AC)
+                    Instance?.settingsDao()?.insert(PREFILLED_SETTINGS)
                 }
             }
         }
@@ -110,7 +126,8 @@ abstract class AppDatabase : RoomDatabase() {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, AppDatabase::class.java, "database")
                     .addCallback(callback)
-                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_5_6, MIGRATION_6_7)
+                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_5_6, MIGRATION_6_7,
+                        MIGRATION_7_8)
                     .build()
                     .also { Instance = it }
             }

@@ -31,7 +31,10 @@ object AppViewModelProvider {
             KitchenViewModel(smartHouseManagerApplication().container.kitchenRepository)
         }
         initializer {
-            TaskViewModel(smartHouseManagerApplication().container.taskRepository)
+            TaskViewModel(
+                smartHouseManagerApplication().container.taskRepository,
+                smartHouseManagerApplication().container.settingsRepository
+            )
         }
         initializer {
             AirConditioningViewModel(smartHouseManagerApplication().container.airConditioningRepository)

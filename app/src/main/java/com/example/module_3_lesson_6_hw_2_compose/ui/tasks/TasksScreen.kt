@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -47,6 +48,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.module_3_lesson_6_hw_2_compose.R
@@ -66,6 +68,8 @@ fun TasksScreen(
         var deleteAlertDialog by remember { mutableStateOf(false) }
         val coroutineScope = rememberCoroutineScope()
 
+        val tasksNumber by viewModelTask.tasksNumber
+
         if (!isAdding) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -83,10 +87,15 @@ fun TasksScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding_medium)))
+                        Text(text = stringResource(
+                            id = R.string.tasks_number,
+                            taskListUiState.taskList.size,
+                            tasksNumber)
+                        )
                         Text(
                             modifier = Modifier
-                                .padding(all = dimensionResource(id = R.dimen.padding_small)),
+                                .padding(all = dimensionResource(id = R.dimen.padding_small))
+                                .offset(x = (-16).dp),
                             text = stringResource(id = R.string.tasks),
                             fontSize = 20.sp
                         )
@@ -167,7 +176,11 @@ fun TasksScreen(
                 containerColor = Green10,
                 contentColor = Color.White,
                 shape = CircleShape,
-                onClick = { isAdding = true }
+                onClick = {
+                    if (viewModelTask.checkTaskMaximumNumber()) {
+                        isAdding = true
+                    }
+                }
             ) { Icon(imageVector = Icons.Default.Add, contentDescription = "add task") }
         } else {
             Column(

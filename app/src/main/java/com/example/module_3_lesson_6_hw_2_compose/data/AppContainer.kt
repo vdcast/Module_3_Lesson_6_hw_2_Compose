@@ -7,6 +7,8 @@ import com.example.module_3_lesson_6_hw_2_compose.data.kitchen.KitchenRepository
 import com.example.module_3_lesson_6_hw_2_compose.data.kitchen.OfflineKitchenRepository
 import com.example.module_3_lesson_6_hw_2_compose.data.rooms.OfflineRoomsRepository
 import com.example.module_3_lesson_6_hw_2_compose.data.rooms.RoomsRepository
+import com.example.module_3_lesson_6_hw_2_compose.data.settings.OfflineSettingsRepository
+import com.example.module_3_lesson_6_hw_2_compose.data.settings.SettingsRepository
 import com.example.module_3_lesson_6_hw_2_compose.data.statistics.OfflineStatisticsRepository
 import com.example.module_3_lesson_6_hw_2_compose.data.statistics.StatisticsRepository
 import com.example.module_3_lesson_6_hw_2_compose.data.tasks.OfflineTaskRepository
@@ -18,6 +20,7 @@ interface AppContainer {
     val kitchenRepository: KitchenRepository
     val taskRepository: TaskRepository
     val airConditioningRepository: AirConditioningRepository
+    val settingsRepository: SettingsRepository
 }
 
 class AppDataContainer(private val context: Context) : AppContainer {
@@ -35,6 +38,9 @@ class AppDataContainer(private val context: Context) : AppContainer {
     }
     override val airConditioningRepository: AirConditioningRepository by lazy {
         OfflineAirConditioningRepository(AppDatabase.getDatabase(context).acDao())
+    }
+    override val settingsRepository: SettingsRepository by lazy {
+        OfflineSettingsRepository(AppDatabase.getDatabase(context).settingsDao())
     }
 
 }

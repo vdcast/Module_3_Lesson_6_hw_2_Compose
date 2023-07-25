@@ -35,8 +35,6 @@
     <string name="cooking_started">Cooking started at: %s</string>
     <string name="cooking_finished">Will be finished at: %s</string>
     <string name="cooking_time">%s sec</string>
-    <string name="plus_ten">+ 10</string>
-    <string name="minus_ten">- 10</string>
     <string name="current_temperature">Current temperature: %d</string>
     <string name="step_temperature">Step: %d</string>
     <string name="temperature_up">Up</string>
@@ -56,8 +54,14 @@
     <string name="change_language">Change Language</string>
     <string name="change_cooking_time">Adjust Cooking Time</string>
     <string name="change_ac_step">Adjust Air Conditioning Step</string>
-    <string name="change_memory">Adjust Number Of Tasks</string>
+    <string name="change_memory">Adjust Maximum Number Of Tasks</string>
     <string name="plus_one">+ 1</string>
     <string name="minus_one">- 1</string>
     <string name="degrees_celsius">%s \u2103</string>
+    <string name="plus_ten">+ 10</string>
+    <string name="minus_ten">- 10</string>
+    <string name="plus_five">+ 5</string>
+    <string name="minus_five">- 5</string>
+    <string name="tasks_number_max">Max: %s</string>
+    <string name="tasks_number">%s/%s</string>
 </resources>
