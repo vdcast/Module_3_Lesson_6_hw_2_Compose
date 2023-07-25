@@ -1,9 +1,7 @@
-package com.example.module_3_lesson_6_hw_2_compose.viewmodel
+package com.example.module_3_lesson_6_hw_2_compose.ui.light_rooms_and_statistics
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.module_3_lesson_6_hw_2_compose.data.network.API
-import com.example.module_3_lesson_6_hw_2_compose.data.network.RetrofitClient
 import com.example.module_3_lesson_6_hw_2_compose.data.statistics.StatisticsItem
 import com.example.module_3_lesson_6_hw_2_compose.data.statistics.StatisticsRepository
 import kotlinx.coroutines.flow.SharingStarted

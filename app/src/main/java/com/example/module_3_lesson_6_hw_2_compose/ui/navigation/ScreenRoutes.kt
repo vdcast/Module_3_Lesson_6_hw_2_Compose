@@ -1,7 +1,7 @@
-package com.example.module_3_lesson_6_hw_2_compose.ui
+package com.example.module_3_lesson_6_hw_2_compose.ui.navigation
 
 sealed class ScreenRoutes(val route: String) {
-    object MainScreen : ScreenRoutes("main_screen")
+    object HomeScreen : ScreenRoutes("home_screen")
     object LightScreen : ScreenRoutes("light_screen")
     object LightControlScreen : ScreenRoutes("light_control_screen")
     object LightStatisticsScreen : ScreenRoutes("light_statistics_screen")
