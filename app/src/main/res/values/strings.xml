@@ -53,4 +53,7 @@
     <string name="change_cooking_time">Adjust Cooking Time</string>
     <string name="change_ac_step">Adjust Air Conditioning Step</string>
     <string name="change_memory">Adjust Number Of Tasks</string>
+    <string name="plus">+ 1</string>
+    <string name="minus">- 1</string>
+    <string name="degrees_celsius">%s \u2103</string>
 </resources>

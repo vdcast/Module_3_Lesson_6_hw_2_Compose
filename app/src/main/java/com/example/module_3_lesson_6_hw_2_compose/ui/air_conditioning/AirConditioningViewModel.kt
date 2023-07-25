@@ -38,6 +38,19 @@ class AirConditioningViewModel(private val airConditioningRepository: AirConditi
         airConditioningRepository.update(updatedAcItem)
     }
 
+    suspend fun changeTemperatureStepUp(name: String) {
+        val acItem = airConditioningRepository.getAcByName(name)
+        val updatedStep = acItem.stepTemperature + 1
+        val updateAcItem = acItem.copy(stepTemperature = updatedStep)
+        airConditioningRepository.update(updateAcItem)
+    }
+    suspend fun changeTemperatureStepDown(name: String) {
+        val acItem = airConditioningRepository.getAcByName(name)
+        val updatedStep = acItem.stepTemperature - 1
+        val updateAcItem = acItem.copy(stepTemperature = updatedStep)
+        airConditioningRepository.update(updateAcItem)
+    }
+
 }
 
 data class AirConditioningListUiState(
