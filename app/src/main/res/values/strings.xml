@@ -48,10 +48,10 @@
     <string name="delete_all_button_no">Cancel</string>
     <string name="task_list_empty">Add some task.</string>
     <string name="settings">Settings</string>
-    <string name="language">Language</string>
+    <string name="about">About</string>
     <string name="advanced_settings">Advanced Settings</string>
     <string name="memory">Memory</string>
-    <string name="change_language">Change Language</string>
+    <string name="about_text">This app was created from the scratch by vdcast.\nSee you soon in my future apps!</string>
     <string name="change_cooking_time">Adjust Cooking Time</string>
     <string name="change_ac_step">Adjust Air Conditioning Step</string>
     <string name="change_memory">Adjust Maximum Number Of Tasks</string>

@@ -12,7 +12,7 @@ import com.example.module_3_lesson_6_hw_2_compose.ui.light.light_control.LightCo
 import com.example.module_3_lesson_6_hw_2_compose.ui.light.statistics.LightStatisticsScreen
 import com.example.module_3_lesson_6_hw_2_compose.ui.settings.SettingsScreen
 import com.example.module_3_lesson_6_hw_2_compose.ui.settings.advanced_settings.AdvancedSettingsScreen
-import com.example.module_3_lesson_6_hw_2_compose.ui.settings.language.LanguageScreen
+import com.example.module_3_lesson_6_hw_2_compose.ui.settings.about.AboutScreen
 import com.example.module_3_lesson_6_hw_2_compose.ui.settings.memory.MemoryScreen
 import com.example.module_3_lesson_6_hw_2_compose.ui.tasks.TasksScreen
 
@@ -56,19 +56,19 @@ fun SmartHouseManagerNavHost(
         }
         composable(ScreenRoutes.SettingsScreen.route) {
             SettingsScreen(
-                onLanguageClicked = { navController.navigate(ScreenRoutes.LanguageScreen.route) },
                 onAdvancedSettingsClicked = { navController.navigate(ScreenRoutes.AdvancedSettingsScreen.route) },
-                onMemoryClicked = { navController.navigate(ScreenRoutes.MemoryScreen.route) }
+                onMemoryClicked = { navController.navigate(ScreenRoutes.MemoryScreen.route) },
+                onLanguageClicked = { navController.navigate(ScreenRoutes.AboutScreen.route) }
             )
-        }
-        composable(ScreenRoutes.LanguageScreen.route) {
-            LanguageScreen()
         }
         composable(ScreenRoutes.AdvancedSettingsScreen.route) {
             AdvancedSettingsScreen()
         }
         composable(ScreenRoutes.MemoryScreen.route) {
             MemoryScreen()
+        }
+        composable(ScreenRoutes.AboutScreen.route) {
+            AboutScreen()
         }
     }
 }

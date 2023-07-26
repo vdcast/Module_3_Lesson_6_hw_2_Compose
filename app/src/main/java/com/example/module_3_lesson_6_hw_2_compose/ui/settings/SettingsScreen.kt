@@ -26,15 +26,15 @@ fun SettingsScreen(
         Text(text = stringResource(id = R.string.settings))
         Button(
             modifier = Modifier.fillMaxWidth(0.5f),
-            onClick = onLanguageClicked
-        ) { Text(text = stringResource(id = R.string.language)) }
-        Button(
-            modifier = Modifier.fillMaxWidth(0.5f),
             onClick = onAdvancedSettingsClicked
         ) { Text(text = stringResource(id = R.string.advanced_settings)) }
         Button(
             modifier = Modifier.fillMaxWidth(0.5f),
             onClick = onMemoryClicked
         ) { Text(text = stringResource(id = R.string.memory)) }
+        Button(
+            modifier = Modifier.fillMaxWidth(0.5f),
+            onClick = onLanguageClicked
+        ) { Text(text = stringResource(id = R.string.about)) }
     }
 }
