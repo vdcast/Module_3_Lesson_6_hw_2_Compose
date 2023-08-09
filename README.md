@@ -7,7 +7,7 @@ Architecture. MVVM.
 **Task:**
 
 Create a conditionally "empty" program on the MVP architecture, no special design. As a server, we take any API (you can choose any API) or connect to any site.
-Let's the application name be "Smart Home Manager".
+Let's the application name be "Smart House Manager".
 1) Main screen: "Light", "Kitchen", "Case", "Air conditioning", "Settings".
 2) "Light": It has screens of "Light Control" (it has a bunch of on / off switches, which are connected to the server by clicking, the answer is 200 - ok), "Statistics" (with a number consumption for this month, for the last and for the year). Several TextFields to make adjustments manually. Data need to be stored somewhere.
 3) "Kitchen": Here is one screen with a button - "Start cooking". Cooking time - 1 min.
